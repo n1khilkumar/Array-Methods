@@ -17,19 +17,19 @@ class array
 			A = new int[10];
 			length = 0;
 		}
-		array(int sz,int ln)
+		array(int size)
 		{
-			size = sz;
+			this->size = size;
 			A = new int[size];
-			length = ln;
+			length = 0;
 		}
 		~array()
 		{
 			delete []A;
 		}
 		int returnLength();
-		void insertRandom(T lim);
-		void insertManually();
+		void insertRandom(int length,T lim);
+		void insertManually(int length);
 		void display();
 		void append(T x);
 		void insert(int ind,T x);
@@ -55,6 +55,7 @@ class array
 		void rightRotate();
 		void insertInSortedArray(T x);
 		bool isSorted();
+		void oddEven();
 };
 
 void swap(int *num1,int *num2)
@@ -71,8 +72,9 @@ int array<T>::returnLength()
 }
 		
 template<class T>
-void array<T>::insertRandom(T lim)
+void array<T>::insertRandom(int length,T lim)
 {
+	this->length = length;
 	srand(time(0));
 	for(int i=0;i<length;i++)
 	{
@@ -81,8 +83,9 @@ void array<T>::insertRandom(T lim)
 }
 
 template<class T>
-void array<T>::insertManually()
+void array<T>::insertManually(int length)
 {
+	this->length = length;
 	cout<<endl;
 	for(int i=0;i<length;i++)
 	{
@@ -381,6 +384,19 @@ bool array<T>::isSorted()
 	return true;
 }
 
+template<class T>
+void array<T>::oddEven()
+{
+	int i=0, j=length-1;
+	while(i<j)
+	{
+		while(A[i]%2==1) i++;
+		while(A[j]%2==0) j--;
+		if(i<j) swap(&A[i++],&A[j--]);
+	}
+	cout<<"\nArray reordered...";
+}
+
 int main()
 {
 	int userIn,lim,x,ind,sort = 0,size,length;
@@ -389,9 +405,7 @@ int main()
 	cout<<"ARRAY MENU DRIVEN PROGRAM"<<endl<<endl;
 	cout<<"\nEnter the size of the array: ";
 	cin>>size;
-	cout<<"Enter the number of elements you want to insert: ";
-	cin>>length;
-	array<int> arr(size,length);
+	array<int> arr(size);
 	do
 	{
 		cout<<"\nPress: "<<endl;
@@ -399,12 +413,19 @@ int main()
 		cout<<"2 to Randomly insert elements."<<endl;
 		cin>>userIn;
 	}while(userIn!=1&&userIn!=2);
-	if(userIn == 1) arr.insertManually();
+	if(userIn == 1)
+	{
+		cout<<"Enter the number of elements you want to insert: ";
+		cin>>length;
+		arr.insertManually(length);
+	} 
 	else
 	{
+		cout<<"Enter the number of elements you want to insert: ";
+		cin>>length;
 		cout<<"\nEnter the maximum limit you want for an element: ";
 		cin>>lim;
-		arr.insertRandom(lim);
+		arr.insertRandom(length,lim);
 	} 
 	system("CLS");
 	cout<<"ARRAY MENU DRIVEN PROGRAM"<<endl<<endl;
@@ -435,6 +456,7 @@ int main()
 		cout<<"22 to insert a value in sorted array."<<endl;
 		cout<<"23 to check if the array is sorted."<<endl;
 		cout<<"24 to sort the array."<<endl;
+		cout<<"25 to put odd elements on left and even elements on right."<<endl;
 		cin>>userIn;
 		system("CLS");
 		switch(userIn)
@@ -596,6 +618,12 @@ int main()
 							arr.mergeSort(0,arr.returnLength()-1);
 							cout<<"Array sorted.";
 						} 
+						break;
+			case 25:	cout<<"Array before reorder: ";
+						arr.display();
+						arr.oddEven();
+						cout<<"\n\nArray after reorder: ";
+						arr.display();
 						break;
 			default:	cout<<"Invalid Selection!!";
 						break;
